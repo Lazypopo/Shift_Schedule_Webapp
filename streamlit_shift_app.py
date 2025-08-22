@@ -8,6 +8,26 @@ from datetime import datetime, timedelta
 import streamlit as st
 from io import BytesIO
 
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+if not st.session_state.logged_in:
+    username = st.text_input("Username")
+    pw = st.text_input("Password", type="password")
+    if st.button("Login"):
+        if (
+            username in st.secrets["passwords"]
+            and pw == st.secrets["passwords"][username]
+        ):
+            st.session_state.logged_in = True
+            st.session_state.user = username
+            st.success(f"Welcome {username}!")
+        else:
+            st.error("Wrong username or password")
+    st.stop()
+
+st.title("排班系統")
+
 st.set_page_config(page_title="ABCIE Shift Scheduler", layout="wide")
 
 ZONES = ["A", "B", "C", "I", "E"]
